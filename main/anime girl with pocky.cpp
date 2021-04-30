@@ -8,13 +8,18 @@ int main()
     sf::Clock clock;
 
     //main character coordinates
-    float x = 300, y = 300;
+    float x = 500, y = 500;
     float dx = 0, dy = 0;
 
     //adding texture to main sprite
     sf::Texture texture;
     texture.loadFromFile("girl.png");
-   
+
+    sf::Sprite girl(texture);
+    girl.setScale(sf::Vector2f(0.3, 0.3));//size of image used
+    sf::Vector2u circleSize = girl.getTexture()->getSize();
+    girl.setOrigin(circleSize.x / 2, circleSize.y / 2);
+
     //adding texture to weapon sprite
     sf::Texture weapon;
     weapon.loadFromFile("pocky.png");
@@ -30,32 +35,29 @@ int main()
         sf::Time time = clock.getElapsedTime();
         clock.restart(); //slightly moning
 
-        Character character(dx, dy, x, y);
-        character.SetTexture(&texture);
+        girl.setPosition(x, y);
 
         //move according to keyboars pressed button
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
         {
-            Character character(-100, dy, x, y);
+            x = x - 100 * time.asSeconds();
         }
 
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
         {
-            dx = 100;
-            Character character(dx, dy, x, y);
+            x = x + 100 * time.asSeconds();
         }
 
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
         {
-            dy = -100;
-            Character character(dx, dy, x, y);
+            y -= 100 * time.asSeconds();
         }
 
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
         {
-            dy = 100;
-            Character character(dx, dy, x, y);
+            y += 100 * time.asSeconds();
         }
+
 
         //moving in window area only
         if (x > 1200)
@@ -79,7 +81,8 @@ int main()
         }
 
         window.clear(sf::Color(255, 192, 203));
-        character.draw(&window);
+        window.draw(girl);
+        //girl.draw(&window);
 
         shoot_cd -= time.asSeconds();
 
